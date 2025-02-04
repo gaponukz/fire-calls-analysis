@@ -20,7 +20,6 @@ aws emr create-cluster \
   --release-label "emr-6.12.0" \
   --applications Name=Spark \
   --use-default-roles \
-  --ec2-attributes KeyName="test1",SubnetId="subnet-0cf75a913332569fb" \
   --instance-groups '[
       {
         "InstanceGroupType": "MASTER",
