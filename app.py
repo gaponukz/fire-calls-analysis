@@ -1,12 +1,19 @@
+import argparse
+
 from pyspark.sql import SparkSession, Window
 from pyspark.sql.functions import col, desc, format_string, rank, to_date, year
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", required=True)
+parser.add_argument("--output", required=True)
+
+args = parser.parse_args()
+assert args.input.endswith(".csv")
 
 spark: SparkSession = SparkSession.builder.appName("Incident analysis").getOrCreate()
 spark.sparkContext.setLogLevel("WARN")
 
-df = spark.read.csv(
-    "s3://bucket-name/sf-fire-calls.csv", header=True, inferSchema=True
-)
+df = spark.read.csv(args.input, header=True, inferSchema=True)
 
 df = df.withColumn("CallDate", to_date(col("CallDate"), "MM/dd/yyyy"))
 df = df.withColumn("Year", year(col("CallDate")))
@@ -33,8 +40,6 @@ result = merged.select(
     ).alias("percent"),
 ).orderBy(col("Year").desc())
 
-result.coalesce(1).write.csv(
-    "s3://bucket-name/sf-fire-calls-output.csv",
-    header=True,
-    mode="overwrite",
-)
+
+if __name__ == "__main__":
+    result.coalesce(1).write.csv(args.output, header=True, mode="overwrite")

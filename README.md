@@ -1,6 +1,12 @@
 # fire-calls-analysis
 PySpark application for fire calls analysis
 
+# Running local
+
+```sh
+spark-submit app.py --input sf-fire-calls.csv --output result
+```
+
 # Running on AWS EMR
 
 Copy input dataset to S3
@@ -41,7 +47,9 @@ aws emr create-cluster \
       "Args": [
         "spark-submit",
         "--deploy-mode", "cluster",
-        "s3://bucket-name/app.py"
+        "s3://bucket-name/app.py",
+        "--input", "s3://bucket-name/sf-fire-calls.csv",
+        "--output", "s3://bucket-name/result"
       ]
     }
   ]' \
@@ -50,5 +58,5 @@ aws emr create-cluster \
 
 Download execution result from S3
 ```sh
-aws s3 sync  s3://bucket-name/sf-fire-calls-output.csv result
+aws s3 sync s3://bucket-name/result result
 ```
