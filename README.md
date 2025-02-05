@@ -1,5 +1,5 @@
 # fire-calls-analysis
-PySpark application for fire calls analysis
+PySpark application for fire calls analysis. Original data source: https://data.sfgov.org/Public-Safety/Fire-Incidents/wr8u-xric/data.
 
 # Running local
 
